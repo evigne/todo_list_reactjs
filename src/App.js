@@ -1,6 +1,7 @@
 import React, { Component } from "react"; //import React from 'react';
 import Todos from "./components/Todos";
 import "./App.css";
+import Header from "./components/layout/Header";
 
 class App extends Component {
   // class App extends React.component
@@ -23,6 +24,8 @@ class App extends Component {
       }
     ]
   };
+
+  //toggle complete
   markComplete = id => {
     this.setState({
       todos: this.state.todos.map(todo => {
@@ -33,11 +36,22 @@ class App extends Component {
       })
     });
   };
+
+  delTodo = id => {
+    this.setState({
+      todos: [...this.state.todos.filter(todo => todo.id !== id)]
+    });
+  };
   render() {
     //life cycle method used to render the component in the browser
     return (
       <div className="App">
-        <Todos todo={this.state.todos} markComplete={this.markComplete} />
+        <Header />
+        <Todos
+          todo={this.state.todos}
+          markComplete={this.markComplete}
+          delTodo={this.delTodo}
+        />
         {/* Just bringing Todos component custom html tag*/}
       </div>
     );

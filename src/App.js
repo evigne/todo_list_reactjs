@@ -3,31 +3,39 @@ import Todos from "./components/Todos";
 import "./App.css";
 import Header from "./components/layout/Header";
 import AddTodo from "./components/AddTodo";
-import uuid from "uuid";
+// import uuid from "uuid";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import About from "./components/pages/About";
+import axios from "axios";
 
 class App extends Component {
   // class App extends React.component
   state = {
-    todos: [
-      {
-        id: uuid.v4(),
-        title: "Take out the trash",
-        completed: false
-      },
-      {
-        id: uuid.v4(),
-        title: "Prepare Dinner",
-        completed: false
-      },
-      {
-        id: uuid.v4(),
-        title: "Watch Movie",
-        completed: false
-      }
-    ]
+    todos: []
+    // todos: [
+    //   {
+    //     id: uuid.v4(),
+    //     title: "Take out the trash",
+    //     completed: false
+    //   },
+    //   {
+    //     id: uuid.v4(),
+    //     title: "Prepare Dinner",
+    //     completed: false
+    //   },
+    //   {
+    //     id: uuid.v4(),
+    //     title: "Watch Movie",
+    //     completed: false
+    //   }
+    // ]
   };
+  //component did mount life cycle method run after all component mounted
+  componentDidMount() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos?_limit=10")
+      .then(res => this.setState({ todos: res.data }));
+  }
 
   //toggle complete
   markComplete = id => {
@@ -42,18 +50,30 @@ class App extends Component {
   };
 
   delTodo = id => {
-    this.setState({
-      todos: [...this.state.todos.filter(todo => todo.id !== id)]
-    });
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(
+      this.setState({
+        todos: [...this.state.todos.filter(todo => todo.id !== id)]
+      })
+    );
+    // this.setState({
+    //   todos: [...this.state.todos.filter(todo => todo.id !== id)]
+    // });
   };
 
   addTodo = title => {
-    const newTodo = {
-      id: uuid.v4(),
-      title,
-      completed: false
-    };
-    this.setState({ todos: [...this.state.todos, newTodo] });
+    axios
+      .post("https://jsonplaceholder.typicode.com/todos", {
+        title,
+        completed: false
+      })
+      .then(res => this.setState({ todos: [...this.state.todos, res.data] }));
+
+    // const newTodo = {
+    //   id: uuid.v4(),
+    //   title,
+    //   completed: false
+    // };
+    // this.setState({ todos: [...this.state.todos, newTodo] });
   };
   render() {
     //life cycle method used to render the component in the browser
@@ -76,7 +96,7 @@ class App extends Component {
                 </React.Fragment>
               )}
             />{" "}
-            {/* render for morethan one component*/}
+            {/* render(life cycle method ) for morethan one component*/}
             <Route path="/about" component={About} />{" "}
             {/* for single component */}
           </div>

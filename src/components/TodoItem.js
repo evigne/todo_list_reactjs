@@ -66,7 +66,9 @@ export class TodoItem extends Component {
 }
 
 TodoItem.propType = {
-  toditem: PropTypes.object.isRequired
+  todoitem: PropTypes.object.isRequired,
+  markComplete: PropTypes.func.isRequired,
+  delTodo: PropTypes.func.isRequired
 };
 
 // const itemStyle = {
